@@ -50,10 +50,12 @@ def buscar_produto(item):
             preco_mercadolivre = preco_real_mercadolivre.text + ',' + preco_cents_mercadolivre.text
         else:
             preco_mercadolivre = preco_real_mercadolivre.getText()
+        site = "Mercado Livre"
 
         # Criação de uma dict
         resultado_mercadolivre_dict= {}
 
+        resultado_mercadolivre_dict['site'] = site
         resultado_mercadolivre_dict['nome'] = nome_produto_mercadolivre.getText()
         resultado_mercadolivre_dict['preço'] = preco_mercadolivre
 
@@ -69,10 +71,12 @@ def buscar_produto(item):
         nome_produto_americanas = teste.find('h3', class_ = "product-name__Name-sc-1shovj0-0 gUjFDF")
         # Extraindo preço do produto
         preco_americanas = teste.find("span", class_ = 'src__Text-sc-154pg0p-0 price__PromotionalPrice-sc-h6xgft-1 ctBJlj price-info__ListPriceWithMargin-sc-1xm1xzb-2 liXDNM').getText().strip()
+        site = "Americanas"
 
         # Criação de uma dict
         resultado_americanas_dict= {}
 
+        resultado_americanas_dict['site'] = site
         resultado_americanas_dict['nome'] = nome_produto_americanas.getText()
         resultado_americanas_dict['preço'] = preco_americanas
 
