@@ -62,8 +62,9 @@ def buscar_produto(item):
         # Atribuindo os dados num dataframe
         resultados_lista_mercadolivre.append(resultado_mercadolivre_dict)
 
-    print(resultados_lista_mercadolivre)
     print("Foram buscados: "+ str(len(resultados_lista_mercadolivre)) + " produtos em Mercado Livre.")
+    print(resultados_lista_mercadolivre)
+    print('\n')
 
     #Adquirindo os nomes e preços de cada elemento contido na lista
     for teste in produtos_americanas:
@@ -83,8 +84,9 @@ def buscar_produto(item):
         # Atribuindo os dados num dataframe
         resultados_lista_americanas.append(resultado_americanas_dict)
 
-    print(resultados_lista_americanas)
     print("Foram buscados: " + str(len(resultados_lista_americanas)) + " produtos em Americanas.")
+    print(resultados_lista_americanas)
+    print('\n')
 
     # Merge nas duas listas de dict
     resultado_todos_produtos = []
@@ -92,6 +94,7 @@ def buscar_produto(item):
     for myDict in resultados_lista_mercadolivre:
         if myDict not in resultado_todos_produtos:
             resultado_todos_produtos.append(myDict)
+    print("Todos produtos armazenados em uma lista:")
     print(resultado_todos_produtos)
 
 buscar_produto(produto)
