@@ -28,12 +28,12 @@ soup_mercadolivre = BeautifulSoup(response_mercadolivre, 'html.parser')
 soup_americanas = BeautifulSoup(response_americanas, 'html.parser')
 # print(soup_americanas.prettify())
 
-
+#Criando função para criacao do JSON file
 def write_json(data, filename="dados_"+produto+"_json.json"):
     with open(filename, "w") as f:
         json.dump(data, f, indent=4)
 
-
+#Criando função que realiza a busca das informacoes dos produtos
 def buscar_produto(item):
     # Extraindo os produtos em ambos sites
     produtos_mercadolivre = soup_mercadolivre.findAll(
