@@ -1,73 +1,81 @@
+from attr import attrs
 from bs4 import BeautifulSoup
 
 import requests
 
 
-# Definindo URLs a serem buscadas
-
-url_mundomax = ("https://www.mundomax.com.br/violao-eletrico-classico-nylon-natural-cx40-yamaha?gclid=Cj0KCQjwzqSWBhDPARIsAK38LY9lGAfSQVU2KEsKoXmU_jOuF8g2OLVSWjebQDx30go_r06eTmTKeyIaAu3WEALw_wcB#")
-
-url_tronic = ("https://www.brasiltronic.com.br/violao-eletrico-classico-nylon-natural-cx40-ii-yamaha-p1330258")
-
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'}
 
+# Definindo URLs a serem buscadas
+url_mercadolivre = ("https://lista.mercadolivre.com.br/")
+
+url_americanas = ("https://www.americanas.com.br/busca/")
+
+#Definindo o item a ser buscao
+produto = input('Qual produto você deseja?')
+
 # Pegando conteúdo dos respectivos htmls através de requests
+response_mercadolivre = requests.get(url_mercadolivre + produto, headers=headers).content
 
-html_mundomax = requests.get(url_mundomax, headers=headers).content
-
-html_tronic = requests.get(url_tronic, headers=headers).content
+response_americanas = requests.get(url_americanas + produto, headers=headers).content
 
 #Criando um objeto BeautifulSoup para ambas
-
-soup_mundomax = BeautifulSoup(html_mundomax, 'html.parser')
-
-soup_tronic = BeautifulSoup(html_tronic, 'html.parser')
-# print(soup_mundomax.prettify())
+soup_mercadolivre = BeautifulSoup(response_mercadolivre, 'html.parser')
+soup_americanas = BeautifulSoup(response_americanas, 'html.parser')
+# print(soup_americanas.prettify())
 
 # Extraindo o nome do produto em ambos sites
-nomeProduto_mundomax = soup_mundomax.find("h1", {"id": "info-title"}).getText().strip()
-nomeProduto_tronic = soup_tronic.find("h1", class_ = "col-12 name no-medium").getText().strip()
+produtos_mercadolivre = soup_mercadolivre.findAll('div', class_ = "ui-search-result__wrapper")
+produtos_americanas = soup_americanas.findAll("div", class_ = "col__StyledCol-sc-1snw5v3-0 jGlQWu src__ColGridItem-sc-122lblh-1 cJnBan")
 
-# print(nomeProduto_mundomax)
-# print(nomeProduto_tronic)
+# print(len(produtos_americanas))
 
-# Extraindo preço do produto
+resultados_lista_mercadolivre= []
+resultados_lista_americanas = []
 
-# Preço original
-precoOriginal_tronic = soup_tronic.find("del", class_ = 'list-price').getText().strip()
-precoOriginal_mundomax = soup_mundomax.find("p", {"id": "info-price"}).getText().strip()
+#Limitando a quantidade de elementos da list
+produtos_mercadolivre = produtos_mercadolivre[:7]
+produtos_americanas = produtos_americanas[:7]
 
-# print(precoOriginal_tronic)
-# print(precoOriginal_mundomax)
+#Adquirindo os nomes e preços de cada elemento contido na lista
+for produto in produtos_mercadolivre:
+    #Extraindo o nome dos produtos
+    nome_produto_mercadolivre = produto.find('h2', class_ = "ui-search-item__title ui-search-item__group__element")
+    # Extraindo preço do produto
+    preco_real_mercadolivre = produto.find("span", class_ = 'price-tag-fraction')
+    preco_cents_mercadolivre = produto.find('span', class_= 'price-tag-amount').find("span", class_ = 'price-tag-cents')
+    if (preco_cents_mercadolivre):
+        preco_mercadolivre = preco_real_mercadolivre.text + ',' + preco_cents_mercadolivre.text
+    else:
+        preco_mercadolivre = preco_real_mercadolivre.getText()
 
-#Preço à vista
-precoAvista_tronic = soup_tronic.find("strong", class_='sale-price').find("span").get_text()
-precoAvista_mundomax = soup_mundomax.find("span", class_="billet-discount-price").getText().strip()
+    # Criação de uma dict
+    resultado_mercadolivre_dict= {}
 
-# print(precoAvista_mundomax)
-# print(precoAvista_tronic)
+    resultado_mercadolivre_dict['nome'] = nome_produto_mercadolivre.getText()
+    resultado_mercadolivre_dict['preço'] = preco_mercadolivre
 
-#Convertendo valores de string para number
- 
-preco_avista_tronic_number = float(precoAvista_tronic.split()[-1].replace('.','').replace(',','.'))
-preco_avista_mundomax_number = float(precoAvista_mundomax.split()[-1].replace('.','').replace(',','.'))
+    # Atribuindo os dados num dataframe
+    resultados_lista_mercadolivre.append(resultado_mercadolivre_dict)
 
-# print(preco_avista_tronic_number)
-# print(preco_avista_mundomax_number)
-# print(type(preco_avista_tronic_number))
-# print(type(preco_avista_mundomax_number))
+print(resultados_lista_mercadolivre)
+print(len(resultados_lista_mercadolivre))
 
-preco_original_tronic_number = float(precoOriginal_tronic.split()[-1].replace('.','').replace(',','.'))
-preco_original_mundomax_number = float(precoOriginal_mundomax.split()[-1].replace('.','').replace(',','.'))
+#Adquirindo os nomes e preços de cada elemento contido na lista
+for teste in produtos_americanas:
+    #Extraindo o nome dos produtos
+    nome_produto_americanas = teste.find('h3', class_ = "product-name__Name-sc-1shovj0-0 gUjFDF")
+    # Extraindo preço do produto
+    preco_americanas = teste.find("span", class_ = 'src__Text-sc-154pg0p-0 price__PromotionalPrice-sc-h6xgft-1 ctBJlj price-info__ListPriceWithMargin-sc-1xm1xzb-2 liXDNM').getText().strip()
 
-# print(preco_original_mundomax_number)
-# print(preco_original_tronic_number)
-# print(type(preco_original_mundomax_number))
-# print(type(preco_original_tronic_number))
+    # Criação de uma dict
+    resultado_americanas_dict= {}
 
-# Calculando descontos de cada site
+    resultado_americanas_dict['nome'] = nome_produto_americanas.getText()
+    resultado_americanas_dict['preço'] = preco_americanas
 
-desconto_mundomax = ((preco_original_mundomax_number - preco_avista_mundomax_number)/preco_original_mundomax_number) * 100
-desconto_tronic = ((preco_original_tronic_number - preco_avista_tronic_number)/preco_original_tronic_number) * 100
-print('{0:.2f}%'.format(desconto_mundomax))
-print('{0:.2f}%'.format(desconto_tronic))
+    # Atribuindo os dados num dataframe
+    resultados_lista_americanas.append(resultado_americanas_dict)
+
+print(resultados_lista_americanas)
+print(len(resultados_lista_americanas))
