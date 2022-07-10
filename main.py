@@ -11,7 +11,7 @@ url_mercadolivre = ("https://lista.mercadolivre.com.br/")
 
 url_americanas = ("https://www.americanas.com.br/busca/")
 
-#Definindo o item a ser buscao
+#Definindo o item a ser buscado
 produto = input('Qual produto você deseja?')
 
 # Pegando conteúdo dos respectivos htmls através de requests
@@ -19,17 +19,18 @@ response_mercadolivre = requests.get(url_mercadolivre + produto, headers=headers
 
 response_americanas = requests.get(url_americanas + produto, headers=headers).content
 
-#Criando um objeto BeautifulSoup para ambas
+#Criando um objeto BeautifulSoup para ambas páginas
 soup_mercadolivre = BeautifulSoup(response_mercadolivre, 'html.parser')
 soup_americanas = BeautifulSoup(response_americanas, 'html.parser')
 # print(soup_americanas.prettify())
 
-# Extraindo o nome do produto em ambos sites
+# Extraindo os produtos em ambos sites
 produtos_mercadolivre = soup_mercadolivre.findAll('div', class_ = "ui-search-result__wrapper")
 produtos_americanas = soup_americanas.findAll("div", class_ = "col__StyledCol-sc-1snw5v3-0 jGlQWu src__ColGridItem-sc-122lblh-1 cJnBan")
 
 # print(len(produtos_americanas))
 
+# Criando listas para armazenar os dados extraídos
 resultados_lista_mercadolivre= []
 resultados_lista_americanas = []
 
