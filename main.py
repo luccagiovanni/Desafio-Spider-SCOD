@@ -57,7 +57,7 @@ def buscar_produto(item):
 
         resultado_mercadolivre_dict['site'] = site
         resultado_mercadolivre_dict['nome'] = nome_produto_mercadolivre.getText()
-        resultado_mercadolivre_dict['preço'] = preco_mercadolivre
+        resultado_mercadolivre_dict['preço'] = "R$ "+ preco_mercadolivre
 
         # Atribuindo os dados num dataframe
         resultados_lista_mercadolivre.append(resultado_mercadolivre_dict)
