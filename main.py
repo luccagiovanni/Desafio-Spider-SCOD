@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 
 import requests
 
+import json
+
 
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'}
 
@@ -23,6 +25,10 @@ response_americanas = requests.get(url_americanas + produto, headers=headers).co
 soup_mercadolivre = BeautifulSoup(response_mercadolivre, 'html.parser')
 soup_americanas = BeautifulSoup(response_americanas, 'html.parser')
 # print(soup_americanas.prettify())
+
+def write_json(data, filename="dados_"+produto+"_json.json"):
+    with open(filename, "w") as f:
+        json.dump(data, f, indent=4)
 
 def buscar_produto(item):
     # Extraindo os produtos em ambos sites
@@ -57,14 +63,14 @@ def buscar_produto(item):
 
         resultado_mercadolivre_dict['site'] = site
         resultado_mercadolivre_dict['nome'] = nome_produto_mercadolivre.getText()
-        resultado_mercadolivre_dict['preço'] = "R$ "+ preco_mercadolivre
+        resultado_mercadolivre_dict['preco'] = "R$ "+ preco_mercadolivre
 
         # Atribuindo os dados num dataframe
         resultados_lista_mercadolivre.append(resultado_mercadolivre_dict)
 
-    print("Foram buscados: "+ str(len(resultados_lista_mercadolivre)) + " produtos em Mercado Livre.")
-    print(resultados_lista_mercadolivre)
-    print('\n')
+    # print("Foram buscados: "+ str(len(resultados_lista_mercadolivre)) + " produtos em Mercado Livre.")
+    # print(resultados_lista_mercadolivre)
+    # print('\n')
 
     #Adquirindo os nomes e preços de cada elemento contido na lista
     for teste in produtos_americanas:
@@ -79,14 +85,14 @@ def buscar_produto(item):
 
         resultado_americanas_dict['site'] = site
         resultado_americanas_dict['nome'] = nome_produto_americanas.getText()
-        resultado_americanas_dict['preço'] = preco_americanas
+        resultado_americanas_dict['preco'] = preco_americanas
 
         # Atribuindo os dados num dataframe
         resultados_lista_americanas.append(resultado_americanas_dict)
 
-    print("Foram buscados: " + str(len(resultados_lista_americanas)) + " produtos em Americanas.")
-    print(resultados_lista_americanas)
-    print('\n')
+    # print("Foram buscados: " + str(len(resultados_lista_americanas)) + " produtos em Americanas.")
+    # print(resultados_lista_americanas)
+    # print('\n')
 
     # Merge nas duas listas de dict
     resultado_todos_produtos = []
@@ -95,6 +101,8 @@ def buscar_produto(item):
         if myDict not in resultado_todos_produtos:
             resultado_todos_produtos.append(myDict)
     print("Todos produtos armazenados em uma lista:")
-    print(resultado_todos_produtos)
+    # print(resultado_todos_produtos)
+
+    write_json(resultado_todos_produtos)
 
 buscar_produto(produto)
