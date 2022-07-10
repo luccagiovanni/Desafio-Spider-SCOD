@@ -86,4 +86,12 @@ def buscar_produto(item):
     print(resultados_lista_americanas)
     print(len(resultados_lista_americanas))
 
+    # Merge nas duas listas de dict
+    resultado_todos_produtos = []
+    resultados_lista_mercadolivre.extend(resultados_lista_americanas)
+    for myDict in resultados_lista_mercadolivre:
+        if myDict not in resultado_todos_produtos:
+            resultado_todos_produtos.append(myDict)
+    print(resultado_todos_produtos)
+
 buscar_produto(produto)
