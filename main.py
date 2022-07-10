@@ -24,59 +24,62 @@ soup_mercadolivre = BeautifulSoup(response_mercadolivre, 'html.parser')
 soup_americanas = BeautifulSoup(response_americanas, 'html.parser')
 # print(soup_americanas.prettify())
 
-# Extraindo os produtos em ambos sites
-produtos_mercadolivre = soup_mercadolivre.findAll('div', class_ = "ui-search-result__wrapper")
-produtos_americanas = soup_americanas.findAll("div", class_ = "col__StyledCol-sc-1snw5v3-0 jGlQWu src__ColGridItem-sc-122lblh-1 cJnBan")
+def buscar_produto(item):
+    # Extraindo os produtos em ambos sites
+    produtos_mercadolivre = soup_mercadolivre.findAll('div', class_ = "ui-search-result__wrapper")
+    produtos_americanas = soup_americanas.findAll("div", class_ = "col__StyledCol-sc-1snw5v3-0 jGlQWu src__ColGridItem-sc-122lblh-1 cJnBan")
 
-# print(len(produtos_americanas))
+    # print(len(produtos_americanas))
 
-# Criando listas para armazenar os dados extraídos
-resultados_lista_mercadolivre= []
-resultados_lista_americanas = []
+    # Criando listas para armazenar os dados extraídos
+    resultados_lista_mercadolivre= []
+    resultados_lista_americanas = []
 
-#Limitando a quantidade de elementos da list
-produtos_mercadolivre = produtos_mercadolivre[:7]
-produtos_americanas = produtos_americanas[:7]
+    #Limitando a quantidade de elementos da list
+    produtos_mercadolivre = produtos_mercadolivre[:7]
+    produtos_americanas = produtos_americanas[:7]
 
-#Adquirindo os nomes e preços de cada elemento contido na lista
-for produto in produtos_mercadolivre:
-    #Extraindo o nome dos produtos
-    nome_produto_mercadolivre = produto.find('h2', class_ = "ui-search-item__title ui-search-item__group__element")
-    # Extraindo preço do produto
-    preco_real_mercadolivre = produto.find("span", class_ = 'price-tag-fraction')
-    preco_cents_mercadolivre = produto.find('span', class_= 'price-tag-amount').find("span", class_ = 'price-tag-cents')
-    if (preco_cents_mercadolivre):
-        preco_mercadolivre = preco_real_mercadolivre.text + ',' + preco_cents_mercadolivre.text
-    else:
-        preco_mercadolivre = preco_real_mercadolivre.getText()
+    #Adquirindo os nomes e preços de cada elemento contido na lista
+    for produto in produtos_mercadolivre:
+        #Extraindo o nome dos produtos
+        nome_produto_mercadolivre = produto.find('h2', class_ = "ui-search-item__title ui-search-item__group__element")
+        # Extraindo preço do produto
+        preco_real_mercadolivre = produto.find("span", class_ = 'price-tag-fraction')
+        preco_cents_mercadolivre = produto.find('span', class_= 'price-tag-amount').find("span", class_ = 'price-tag-cents')
+        if (preco_cents_mercadolivre):
+            preco_mercadolivre = preco_real_mercadolivre.text + ',' + preco_cents_mercadolivre.text
+        else:
+            preco_mercadolivre = preco_real_mercadolivre.getText()
 
-    # Criação de uma dict
-    resultado_mercadolivre_dict= {}
+        # Criação de uma dict
+        resultado_mercadolivre_dict= {}
 
-    resultado_mercadolivre_dict['nome'] = nome_produto_mercadolivre.getText()
-    resultado_mercadolivre_dict['preço'] = preco_mercadolivre
+        resultado_mercadolivre_dict['nome'] = nome_produto_mercadolivre.getText()
+        resultado_mercadolivre_dict['preço'] = preco_mercadolivre
 
-    # Atribuindo os dados num dataframe
-    resultados_lista_mercadolivre.append(resultado_mercadolivre_dict)
+        # Atribuindo os dados num dataframe
+        resultados_lista_mercadolivre.append(resultado_mercadolivre_dict)
 
-print(resultados_lista_mercadolivre)
-print(len(resultados_lista_mercadolivre))
+    print(resultados_lista_mercadolivre)
+    print(len(resultados_lista_mercadolivre))
 
-#Adquirindo os nomes e preços de cada elemento contido na lista
-for teste in produtos_americanas:
-    #Extraindo o nome dos produtos
-    nome_produto_americanas = teste.find('h3', class_ = "product-name__Name-sc-1shovj0-0 gUjFDF")
-    # Extraindo preço do produto
-    preco_americanas = teste.find("span", class_ = 'src__Text-sc-154pg0p-0 price__PromotionalPrice-sc-h6xgft-1 ctBJlj price-info__ListPriceWithMargin-sc-1xm1xzb-2 liXDNM').getText().strip()
+    #Adquirindo os nomes e preços de cada elemento contido na lista
+    for teste in produtos_americanas:
+        #Extraindo o nome dos produtos
+        nome_produto_americanas = teste.find('h3', class_ = "product-name__Name-sc-1shovj0-0 gUjFDF")
+        # Extraindo preço do produto
+        preco_americanas = teste.find("span", class_ = 'src__Text-sc-154pg0p-0 price__PromotionalPrice-sc-h6xgft-1 ctBJlj price-info__ListPriceWithMargin-sc-1xm1xzb-2 liXDNM').getText().strip()
 
-    # Criação de uma dict
-    resultado_americanas_dict= {}
+        # Criação de uma dict
+        resultado_americanas_dict= {}
 
-    resultado_americanas_dict['nome'] = nome_produto_americanas.getText()
-    resultado_americanas_dict['preço'] = preco_americanas
+        resultado_americanas_dict['nome'] = nome_produto_americanas.getText()
+        resultado_americanas_dict['preço'] = preco_americanas
 
-    # Atribuindo os dados num dataframe
-    resultados_lista_americanas.append(resultado_americanas_dict)
+        # Atribuindo os dados num dataframe
+        resultados_lista_americanas.append(resultado_americanas_dict)
 
-print(resultados_lista_americanas)
-print(len(resultados_lista_americanas))
+    print(resultados_lista_americanas)
+    print(len(resultados_lista_americanas))
+
+buscar_produto(produto)
