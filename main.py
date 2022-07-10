@@ -63,7 +63,7 @@ def buscar_produto(item):
         resultados_lista_mercadolivre.append(resultado_mercadolivre_dict)
 
     print(resultados_lista_mercadolivre)
-    print(len(resultados_lista_mercadolivre))
+    print("Foram buscados: "+ str(len(resultados_lista_mercadolivre)) + " produtos em Mercado Livre.")
 
     #Adquirindo os nomes e preços de cada elemento contido na lista
     for teste in produtos_americanas:
@@ -84,7 +84,7 @@ def buscar_produto(item):
         resultados_lista_americanas.append(resultado_americanas_dict)
 
     print(resultados_lista_americanas)
-    print(len(resultados_lista_americanas))
+    print("Foram buscados: " + str(len(resultados_lista_americanas)) + " produtos em Americanas.")
 
     # Merge nas duas listas de dict
     resultado_todos_produtos = []
